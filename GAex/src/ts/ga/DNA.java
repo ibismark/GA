@@ -1,5 +1,6 @@
 package ts.ga;
 
+
 public class DNA {
 
 	private int[] dna;  //突然変異をするメソッドを加える
@@ -11,11 +12,13 @@ public class DNA {
 	private int[] dec;
 	private double[] x;
 	
-	
-	public DNA(int d, int len) {
+	public DNA(int d, int len, int[] gr) {
 		dim = d;  //次元
 		length = len;
 		dna_length = dim * length;
+		dna = gr;
+		
+		/*
 		dna = new int[dna_length]; //gray_code
 		for(int i=0; i<dna_length; i++){
 			double r = Math.random();
@@ -25,12 +28,19 @@ public class DNA {
 				dna[i] = 0;
 			}
 		}
+		*/
 				
 		//for(int i=0;i<dna_length;i++){
 		//	System.out.println(dna[i]);
 		//}
 	}
 
+	
+	public int[] getDNA(){
+		int[] ddna = dna;
+		return ddna;
+	}
+	
 	//grayコードを2進数へ変換
 	public void toBin(){
 		dna_bin = new int[dna_length];
@@ -59,8 +69,8 @@ public class DNA {
 			le=j*length;
 			num=0;
 			base=1;
-			System.out.print(le);
-			System.out.print((j+1)*length);
+			//System.out.println(le);
+			//System.out.println((j+1)*length);
 			for(i=le;i<(j+1)*length;i++){
 				if(dna_bin[i]==1){
 					num=num+base;
@@ -77,8 +87,8 @@ public class DNA {
 		for(int i=0;i<dim;i++){
 			x[i] = dec[i]*(upp-low) / (Math.pow(2, length)-1)+low;
 		}
-		System.out.println(x[0]);
-		System.out.println(x[1]);
+		//System.out.println(x[0]);
+		//System.out.println(x[1]);
 	}
 	
 	public double evaluation(int no) {
