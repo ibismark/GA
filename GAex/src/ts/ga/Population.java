@@ -15,6 +15,7 @@ public class Population {
 	private int N;				//population size
 	private DNA[] t;			//dna array
 	private int sum;
+	private double min;			//result
 	
 	//二次元配列で管理した方が良い？
 	private int[] c_array1;		//child dna array
@@ -67,23 +68,21 @@ public class Population {
 		
 		c_array1 = (int[])te1.clone();	//clone() : copy array 
 		c_array2 = (int[])te2.clone();
-		//child1 = new DNA(dim, length);
-		//child2 = new DNA(dim, length);
-		System.out.println(Arrays.toString(c_array1));
-		System.out.println(Arrays.toString(c_array2));
+		//System.out.println(Arrays.toString(c_array1));
+		//System.out.println(Arrays.toString(c_array2));
 		rep_line = (int)(Math.random()*dna_length)+1;
-		System.out.println(rep_line);
+		//System.out.println(rep_line);
 		
 		//perform crossover
 		for(int i=rep_line;i<dna_length;i++){
 			c_array1[i] = te2[i];
 			c_array2[i] = te1[i];
 		}
-		System.out.println(Arrays.toString(c_array1));
-		System.out.println(Arrays.toString(c_array2));
+		//System.out.println(Arrays.toString(c_array1));
+		//System.out.println(Arrays.toString(c_array2));
 	}
 	
-	/*
+	
 	public void crossover_2(DNA p1, DNA p2){
 		int[] te1 = p1.getDNA();	//get gray code of parents
 		int[] te2 = p2.getDNA();
@@ -112,7 +111,6 @@ public class Population {
 		System.out.println(Arrays.toString(c_array1));
 		System.out.println(Arrays.toString(c_array2));
 	}
-	*/
 
 	
 	public void mutation() {
@@ -120,7 +118,7 @@ public class Population {
         for(int i=0;i<dna_length;i++){
         	mu_p = Math.random()*1000;
         	if(mu_p <= 10){
-        		sum++;
+        		//sum++;
         		//System.out.println("mutation!");
         		c_array1[i] = ~c_array1[i];
         	}
@@ -135,56 +133,115 @@ public class Population {
         }
 
 	}
+	
+	
+	public int judge(){
+		int k=0;
+		min=p.get(0).evaluation(problem);
+		for(int i=0;i<p.size();i++){
+			if(p.get(i).evaluation(problem) <= min){
+				if(p.get(i).evaluation(problem) == min){
+					k++;
+				}else{
+					min = p.get(i).evaluation(problem);
+					k=0;
+				}
+			}
+			//System.out.println(p.get(i).evaluation(problem));	
+		}
+		if(k>=(N/2)){
+			return 0;
+		}else {
+			return 1;
+		}
+	}
 
+	
+	
 	
 	public void selection() {
 		int rnd1, rnd2;
+		int k=0;
 		DNA parent1, parent2, child1, child2;
 		double[] srt_array = new double[4];
-		double min, temp=0.0;
-		int k;
+		double[] srt_array2 = new double[4];
+		
+		
+		
 		//HashMap<Character, Double> srt_dict = new HashMap<Character, Double>();
 		/*
 		for(int i=0;i<N;i++){
 			System.out.println(p.get(i).evaluation(problem));
 		}
 		*/
-		for(int i=0;i<20;i++){
-		rnd1 = (int)(Math.random()*N);
-		rnd2 = (int)(Math.random()*N);
+		//while(true){
+			//if(judge()!=1)
+				//break;
+//		while(k<=generation){
+		while(judge()!=0){
+			k++;
+			generation++;
+			rnd1 = (int)(Math.random()*N);
+			rnd2 = (int)(Math.random()*N);
 		
-		parent1 = p.get(rnd1);
-		parent2 = p.get(rnd2);
-		//System.out.println(parent1.evaluation(problem));
-		//System.out.println(parent2.evaluation(problem));
+			parent1 = p.get(rnd1);
+			parent2 = p.get(rnd2);
+			//System.out.println(parent1.evaluation(problem));
+			//System.out.println(parent2.evaluation(problem));
 		
-		crossover(parent1, parent2);
-		mutation();
+			crossover(parent1, parent2);
+			mutation();
 		
-		//2*pair分だけ子供の配列を作ると良い？
-		child1 = new DNA(dim, length, c_array1);
-		child2 = new DNA(dim, length, c_array2);
+			//2*pair分だけ子供の配列を作ると良い？
+			child1 = new DNA(dim, length, c_array1);
+			child2 = new DNA(dim, length, c_array2);
 		
-		srt_array[0] = parent1.evaluation(problem);
-		srt_array[1] = parent2.evaluation(problem);
-		srt_array[2] = child1.evaluation(problem);
-		srt_array[3] = child2.evaluation(problem);
+			if(child1.evaluation(problem)==0.0 || child2.evaluation(problem)==0.0){
+				break;
+			}
 		
-		for(int j=0;j<4;j++){
-			if(srt_array[0] > srt_array[j])
-				k=j;
+			srt_array[0] = parent1.evaluation(problem);
+			srt_array[1] = parent2.evaluation(problem);
+			srt_array[2] = child1.evaluation(problem);
+			srt_array[3] = child2.evaluation(problem);
+		
+			srt_array2 = srt_array.clone();
+		
+			//System.out.println(Arrays.toString(srt_array));
+			//System.out.println(Arrays.toString(p.get(rnd1).getDNA()));
+			//System.out.println(Arrays.toString(p.get(rnd2).getDNA()));
+			Arrays.sort(srt_array2);
+			if(srt_array2[0] == srt_array[0]){
+				p.set(rnd1, parent1);
+			}else if(srt_array2[0] == srt_array[1]){
+				p.set(rnd1, parent2);
+			}else if(srt_array2[0] == srt_array[2]){
+				p.set(rnd1, child1);
+			}else if(srt_array2[0] == srt_array[3]){
+				p.set(rnd1, child2);	
+			}
+		
+			if(srt_array2[1] == srt_array[0]){
+				p.set(rnd2, parent1);
+			}else if(srt_array2[1] == srt_array[1]){
+				p.set(rnd2, parent2);
+			}else if(srt_array2[1] == srt_array[2]){
+				p.set(rnd2, child1);
+			}else if(srt_array2[1] == srt_array[3]){
+				p.set(rnd2, child2);	
+			}
+		
+			//System.out.println(Arrays.toString(p.get(rnd1).getDNA()));
+			//System.out.println(Arrays.toString(p.get(rnd1).getDNA()));
+			//System.out.println(Arrays.toString(srt_array));
+		
 		}
 		
-		System.out.println(Arrays.toString(srt_array));		
-		Arrays.sort(srt_array);
-		System.out.println(Arrays.toString(srt_array));
 		
-		//p.set(rnd1, )
-		
-		}
-		
-		
-		//System.out.println(child1.evaluation(problem));
+		System.out.println("min= " + min);
+		System.out.println("generation= " + generation);
+		System.out.println("");
+		System.out.println(Arrays.toString(srt_array2));
 		System.out.println("generate mutation : " +sum);
 	}
 	
