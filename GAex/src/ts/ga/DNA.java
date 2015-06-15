@@ -91,6 +91,8 @@ public class DNA {
 		//System.out.println(x[1]);
 	}
 	
+	
+	
 	public double evaluation(int no) {
 		Problem pr = new Problem(no, dim);
 		toBin();
