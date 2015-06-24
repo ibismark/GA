@@ -16,34 +16,31 @@ public class Population
 		size = s;
 		length = len;
 		dna_length = dim * length;
-		// �̏W�c���`
+		// population array
 		population = new ArrayList<DNA>(size);
-		// �̂�size���������C�̏W�c�֒ǉ�
+		// create dna
 		for (int i = 0; i < size; i++)
 		{
 			DNA dna = new DNA(dim, length);
 			population.add(dna);
 		}
-		// �����Ƀ\�[�g
+		// sort eval 
 		sort();
 		// showAll();
-		// �ŗǌ̎擾
 		DNA bestDNA = (DNA) population.get(0);
-		// �ŗǌ̊֐��l�擾
+		// best dna
 		best = bestDNA.evaluation(problem);
 	}
 
+	//一様交叉
 	public void crossover()
 	{
-		// �e1�I��
 		int index = (int) (Math.random() * population.size());
 		parent1 = population.remove(index);
 
-		// �e2�I��
 		index = (int) (Math.random() * population.size());
 		parent2 = population.remove(index);
 
-		// ��l����
 		int c1[] = new int[dna_length];
 		int c2[] = new int[dna_length];
 		for (int i = 0; i < dna_length; i++)
@@ -59,36 +56,30 @@ public class Population
 				c2[i] = parent1.get(i);
 			}
 		}
-		// �q�̐���
+		
 		child1 = new DNA(c1, dim);
 		child2 = new DNA(c2, dim);
 	}
 
 	public void mutation(double p)
 	{
-		// �m��p�œˑR�ψٓK�p
 		child1.mutation(p);
 		child2.mutation(p);
 	}
 
 	public void selection()
 	{
-		// 4�̂��W�c�֖߂�
 		population.add(parent1);
 		population.add(parent2);
 		population.add(child1);
 		population.add(child2);
 
-		// �����\�[�g
 		sort();
-
-		// �ň��̓���
 		population.remove(population.size() - 1);
 		population.remove(population.size() - 1);
 
-		// �ŗǌ̎擾
 		DNA bestDNA = (DNA) population.get(0);
-		// �ŗǌ̊֐��l�擾
+		//評価関数
 		best = bestDNA.evaluation(problem);
 	}
 
@@ -102,7 +93,6 @@ public class Population
 				DNA obj1 = (DNA) population.get(i + 1);
 				if (obj0.evaluation(problem) > obj1.evaluation(problem))
 				{
-					// ����ւ�
 					DNA obj = population.remove(i);
 					population.add(i + 1, obj);
 				}
