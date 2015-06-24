@@ -10,7 +10,7 @@ public class NXTSimulator
 {
 	private BufferedImage img;
 	private int gw, gh;
-	private int radius = 4; // �Z���T�[���a
+	private int radius = 4; // レンズ半径
 	private int rgb[];
 
 	public static void main(String[] args)
@@ -28,10 +28,10 @@ public class NXTSimulator
 		gh = img.getHeight();
 		System.out.println(gw + "\t" + gh);
 		//int rgb[];
-		rgb = getSensorValue(500,40); // ��
-		rgb = getSensorValue(500,50); //
-		rgb = getSensorValue(500,53); //
-		rgb = getSensorValue(500,60); // ��
+		rgb = getSensorValue(500,40); 
+		rgb = getSensorValue(500,50); 
+		rgb = getSensorValue(500,53); 
+		rgb = getSensorValue(500,60);
 	}
 
 	BufferedImage loadImage(String name)
