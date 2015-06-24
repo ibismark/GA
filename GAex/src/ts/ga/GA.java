@@ -2,24 +2,20 @@ package ts.ga;
 
 public class GA {
 
-	//private int problem;
-
-	//private int dim;
-
-	//private int generation;
-
-	//private int population_size;
-	
-	//private length;
-
 	public static void main(String[] args) {
 		int problem =1;
-		int dim=10;
-		int population_size=200;
+		int dim=5;
+		int population_size=100;
 		int generation=0;
-		int length = 10;
+		int length = 24;
 		Population p = new Population(dim, length, problem, generation, population_size);
-		p.selection();
+		
+		while(p.getbest()>-4.687){
+			p.selection();
+			generation++;
+		}
+		System.out.println(p.getbest());
+		System.out.println(generation);
 	}
 
 }

@@ -19,22 +19,24 @@ public class DNA {
 		dna = gr;
 		
 		/*
-		dna = new int[dna_length]; //gray_code
-		for(int i=0; i<dna_length; i++){
+		for(int j=0; j<dna_length; j++){
 			double r = Math.random();
 			if(r<0.5){
-				dna[i] = 1;
+				dna[j] = 1;
 			}else{
-				dna[i] = 0;
+				dna[j] = 0;
 			}
 		}
 		*/
-				
-		//for(int i=0;i<dna_length;i++){
-		//	System.out.println(dna[i]);
-		//}
 	}
 
+	
+	/*
+	public DNA(int[] c, int d){
+		
+	}
+	*/
+	
 	
 	public int[] getDNA(){
 		int[] ddna = dna;
@@ -52,11 +54,6 @@ public class DNA {
 				dna_bin[i] = dna[i] ^ dna_bin[i-1];
 			}
 		}
-		/*
-		for(int i=0;i<dna_length;i++){
-			System.out.println(dna_bin[i]);
-		}
-		*/
 	}
 
 	
@@ -69,8 +66,6 @@ public class DNA {
 			le=j*length;
 			num=0;
 			base=1;
-			//System.out.println(le);
-			//System.out.println((j+1)*length);
 			for(i=le;i<(j+1)*length;i++){
 				if(dna_bin[i]==1){
 					num=num+base;
@@ -78,7 +73,6 @@ public class DNA {
 				base*=2;
 			}
 			dec[j] = num;
-			//System.out.println(num);
 		}
 	}
 	
@@ -87,8 +81,6 @@ public class DNA {
 		for(int i=0;i<dim;i++){
 			x[i] = dec[i]*(upp-low) / (Math.pow(2, length)-1)+low;
 		}
-		//System.out.println(x[0]);
-		//System.out.println(x[1]);
 	}
 	
 	
@@ -102,5 +94,21 @@ public class DNA {
 		//System.out.println(eval);
 		return eval;
 	}
+	
+	
+	/*
+	public static void main(String[] args){
+		double[] g_code= new double[3];
+		for(int j=0; j<3; j++){
+			double r = Math.random();
+			if(r<0.5){
+				g_code[j] = 1;
+			}else{
+				g_code[j] = 0;
+			}
+		}
+		//DNA dna = new DNA(1, 3, g_code);
+	}
+	*/
 
 }

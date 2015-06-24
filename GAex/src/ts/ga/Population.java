@@ -10,8 +10,8 @@ public class Population {
 	private int dim;			//dimension
 	private int dna_length;		//dimension * length 
 	private int generation;
-	private int length;			//individual dna length
-	private ArrayList<DNA> p;	//population
+	private int length;			//individual dim length
+	private ArrayList<DNA> p;	//population array
 	private int N;				//population size
 	private DNA[] t;			//dna array
 	private int sum;
@@ -20,9 +20,8 @@ public class Population {
 	//二次元配列で管理した方が良い？
 	private int[] c_array1;		//child dna array
 	private int[] c_array2;
-	//private DNA child1;
-	//private DNA child2;
-	//private int[] g_code;
+	
+	private double best = 1.0e+4;
 
 	
 	public Population(int d, int len, int no, int ge, int po) {
@@ -36,7 +35,8 @@ public class Population {
 		t = new DNA[N];
 		
 		sum=0;
-		
+	
+		//create population
 		for(int i=0; i<N; i++){
 			int[] g_code = new int[dna_length]; 	//gray code
 			for(int j=0; j<dna_length; j++){
@@ -47,8 +47,12 @@ public class Population {
 					g_code[j] = 0;
 				}
 			}
-			t[i] = new DNA(dim, length, g_code);	//create dna
-			p.add(t[i]);		//add arraylist to DNA object
+			t[i] = new DNA(dim, length, g_code);	//create dnaa
+			double eval = t[i].evaluation(problem);
+			if(eval < best){
+				best = eval;
+			}
+			p.add(t[i]);		//add DNA object in arraylist
 			//System.out.println(p.get(i).evaluation(problem));
 		}
 	}
@@ -68,23 +72,19 @@ public class Population {
 		
 		c_array1 = (int[])te1.clone();	//clone() : copy array 
 		c_array2 = (int[])te2.clone();
-		//System.out.println(Arrays.toString(c_array1));
-		//System.out.println(Arrays.toString(c_array2));
 		rep_line = (int)(Math.random()*dna_length)+1;
-		//System.out.println(rep_line);
 		
 		//perform crossover
 		for(int i=rep_line;i<dna_length;i++){
 			c_array1[i] = te2[i];
 			c_array2[i] = te1[i];
 		}
-		//System.out.println(Arrays.toString(c_array1));
-		//System.out.println(Arrays.toString(c_array2));
 	}
 	
 	
+	/*
 	public void crossover_2(DNA p1, DNA p2){
-		int[] te1 = p1.getDNA();	//get gray code of parents
+		int[] te1 = p1.getDNA();	//get gray code[dna] of parents
 		int[] te2 = p2.getDNA();
 		c_array1 = new int[dna_length];
 		c_array2 = new int[dna_length];
@@ -104,20 +104,21 @@ public class Population {
 		System.out.println(rep_line2);
 		
 		//perform crossover
-		for(int i=rep_line;i<dna_length;i++){
+		for(int i=rep_line1;i<dna_length;i++){
 			c_array1[i] = te2[i];
 			c_array2[i] = te1[i];
 		}
 		System.out.println(Arrays.toString(c_array1));
 		System.out.println(Arrays.toString(c_array2));
 	}
+	*/
 
 	
 	public void mutation() {
 		double mu_p;
         for(int i=0;i<dna_length;i++){
         	mu_p = Math.random()*1000;
-        	if(mu_p <= 10){
+        	if(mu_p < 100){
         		//sum++;
         		//System.out.println("mutation!");
         		c_array1[i] = ~c_array1[i];
@@ -125,7 +126,7 @@ public class Population {
         }
         for(int i=0;i<dna_length;i++){
         	mu_p = Math.random()*1000;
-        	if(mu_p <= 10){
+        	if(mu_p < 50){
         		sum++;
         		//System.out.println("mutation!");
         		c_array2[i] = ~c_array2[i];
@@ -174,11 +175,8 @@ public class Population {
 			System.out.println(p.get(i).evaluation(problem));
 		}
 		*/
-		//while(true){
-			//if(judge()!=1)
-				//break;
-//		while(k<=generation){
-		while(judge()!=0){
+		//while(judge()!=0){
+		//while(best>0.05){
 			k++;
 			generation++;
 			rnd1 = (int)(Math.random()*N);
@@ -186,8 +184,6 @@ public class Population {
 		
 			parent1 = p.get(rnd1);
 			parent2 = p.get(rnd2);
-			//System.out.println(parent1.evaluation(problem));
-			//System.out.println(parent2.evaluation(problem));
 		
 			crossover(parent1, parent2);
 			mutation();
@@ -196,9 +192,6 @@ public class Population {
 			child1 = new DNA(dim, length, c_array1);
 			child2 = new DNA(dim, length, c_array2);
 		
-			if(child1.evaluation(problem)==0.0 || child2.evaluation(problem)==0.0){
-				break;
-			}
 		
 			srt_array[0] = parent1.evaluation(problem);
 			srt_array[1] = parent2.evaluation(problem);
@@ -230,22 +223,33 @@ public class Population {
 			}else if(srt_array2[1] == srt_array[3]){
 				p.set(rnd2, child2);	
 			}
-		
+			
+			if(srt_array2[0] < best){
+				best = srt_array2[0];
+			}		
 			//System.out.println(Arrays.toString(p.get(rnd1).getDNA()));
 			//System.out.println(Arrays.toString(p.get(rnd1).getDNA()));
 			//System.out.println(Arrays.toString(srt_array));
 		
-		}
+		//}
 		
 		
-		System.out.println("min= " + min);
+		//System.out.println("ans= " + min);
+		System.out.println("ans= " + best);
+		/*
 		System.out.println("generation= " + generation);
 		System.out.println("");
 		System.out.println(Arrays.toString(srt_array2));
 		System.out.println("generate mutation : " +sum);
+		*/
 	}
 	
-	public void run() {
+	public double getbest(){
+		return best;
 	}
-
+/*	
+	public double getGeneration(){
+		return generation;
+	}
+*/
 }

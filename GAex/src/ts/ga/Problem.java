@@ -1,5 +1,7 @@
 package ts.ga;
 
+//import java.util.zip.ZipEntry;
+
 public class Problem {
 	private double f;
 	private int problem, dim;
@@ -46,5 +48,18 @@ public class Problem {
 		}
 		return -f;
 	}
+	
+	
+	/*
+	public static void main(String[] args){
+		Problem pr = new Problem(0,  5);
+		double x[] = new double[5];
+		x[0] = x[1] = x[2] = x[3] = x[4] = -1;
+		System.out.println("eval = " + pr.eval(x));
+		//1.19
+		
+	}
+	*/
+
 
 }
